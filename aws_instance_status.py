@@ -1,5 +1,3 @@
-import json
-from unittest import installHandler
 import boto3
 
 client = boto3.client('ec2')
@@ -22,14 +20,18 @@ def check_status(client, instance1):
     
     # ip address assigned to ec2 terminal
     network_interface = res.get('Reservations')[0].get('Instances')[0].get('NetworkInterfaces')[0].get('Association')
-    public_dns_name = network_interface.get('PublicDnsName')
-    public_ip = network_interface.get('PublicIp')
-    print('Public Ip: ', public_ip)
-    print('Dns Name: ', public_dns_name)
+    try:
+        public_dns_name = network_interface.get('PublicDnsName')
+        public_ip = network_interface.get('PublicIp')
+        print('Public Ip: ', public_ip)
+        print('Dns Name: ', public_dns_name)
+    except:
+        print('Public Ip: No Ip')
+        print('Dns Name: No Dns Name')
 
     # status of running server
     state = res.get('Reservations')[0].get('Instances')[0].get('State')
-    print('Status code: ', state.get('Code'), ' (0:pending, 16:running, 32:shutting-down,  48:terminated, 64:stopping, 80:stopped)')
+    print('Status code: ', state.get('Code'), ' (0:pending, 16:running, 32:shutting-down, 48:terminated, 64:stopping, 80:stopped)')
     print('Status name: ', state.get('Name'))
 
     # print(json.load(res.Instances[0]PrivateDnsName))
